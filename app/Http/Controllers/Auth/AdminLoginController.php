@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Auth;
 
 class AdminLoginController extends Controller
 {
     public function __construct(){
-        $this->middleware('guest:admin');
+        $this->middleware('guest:admin', ['except' => ['logout']]);
+        
     }
     public function ShowLoginForm(){
         return view('auth.admin-login');
@@ -26,5 +28,10 @@ class AdminLoginController extends Controller
         }
         // if unsuccess then redirect back to the login with form data
         return redirect()->back()->withInput($request->only('email','remember'));
+    }
+    public function logout()
+    {
+        Auth::guard('admin')->logout();
+        return redirect('/');
     }
 }
